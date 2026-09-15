@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -30,7 +32,17 @@ android {
             keyPassword = System.getenv("KEY_PASSWORD")
         }
         create("debugConfig") {
-            storeFile = file("${rootDir}/debug.keystore")
+            val keystoreFile = file("${rootDir}/debug.keystore")
+            if (!keystoreFile.exists()) {
+                val b64File = file("${rootDir}/debug.keystore.base64")
+                if (b64File.exists()) {
+                    try {
+                        val bytes = Base64.getDecoder().decode(b64File.readText().trim())
+                        keystoreFile.writeBytes(bytes)
+                    } catch (_: Exception) {}
+                }
+            }
+            storeFile = keystoreFile
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"

@@ -32,13 +32,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Ensure Executable Permissions & Keystore
+      - name: Restore Signing Keystore & Prepare Permissions
         run: |
           chmod +x gradlew
-          if [ ! -f "debug.keystore" ] && [ -f "debug.keystore.base64" ]; then
-            echo "Restoring permanent signing key from base64..."
-            base64 --decode debug.keystore.base64 > debug.keystore
+          if [ ! -f "debug.keystore" ]; then
+            if [ -f "debug.keystore.base64" ]; then
+              echo "Restoring keystore from debug.keystore.base64..."
+              base64 -d debug.keystore.base64 > debug.keystore
+            fi
           fi
+          if [ ! -f "debug.keystore" ] || [ ! -s "debug.keystore" ]; then
+            echo "Generating permanent keystore from embedded signature..."
+            echo "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" | base64 -d > debug.keystore
+          fi
+          ls -lh debug.keystore
 
       - name: Build Application APK
         run: |
