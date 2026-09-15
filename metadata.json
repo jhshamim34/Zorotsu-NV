@@ -1,0 +1,6 @@
+{
+  "name": "Zorotsu",
+  "description": "Anime, manga, and light novel tracking and streaming application",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
