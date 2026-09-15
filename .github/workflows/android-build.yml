@@ -31,6 +31,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-disabled: false
 
       - name: Restore Signing Keystore & Prepare Permissions
         run: |
@@ -49,7 +51,7 @@ jobs:
 
       - name: Build Application APK
         run: |
-          ./gradlew assembleDebug --no-daemon --warning-mode=none
+          ./gradlew clean assembleDebug --no-daemon --no-build-cache --warning-mode=none
 
       - name: Collect Output APKs
         run: |
